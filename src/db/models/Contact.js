@@ -6,14 +6,17 @@ const contactSchema = new Schema(
       type: String,
       required: true,
     },
-    phoneNamber: {
+    phoneNumber: {
       type: String,
       required: true,
     },
-    email: String,
+    email: {
+      type: String,
+      required: false,
+    },
     isFavorite: {
       type: Boolean,
-      required: true,
+      required: false,
       default: false,
     },
     contactType: {
@@ -25,6 +28,7 @@ const contactSchema = new Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
   },
 );
 

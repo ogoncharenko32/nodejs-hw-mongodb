@@ -2,9 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import dotenv from 'dotenv';
+import router from './routers/contacts.js';
 
-import { getEnvVar } from '../utils/getEnvVar.js';
-import * as contactsServices from './services/contacts.js';
+import { getEnvVar } from './utils/getEnvVar.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
 dotenv.config();
 
@@ -24,38 +26,11 @@ export const setupServer = () => {
     }),
   );
 
-  app.get('/contacts', async (req, res) => {
-    const data = await contactsServices.getAllContacts();
-    res.status(200).json({
-      status: 200,
-      message: 'Successfully found contacts!',
-      data,
-    });
-  });
+  app.use('/', router);
 
-  app.get('/contacts/:contactId', async (req, res) => {
-    console.log(req);
-    const { contactId } = req.params;
-    const data = await contactsServices.getContactById(contactId);
+  app.use(notFoundHandler);
 
-    if (!data) {
-      return res.status(404).json({
-        message: `Contact not found'`,
-      });
-    }
-
-    res.status(200).json({
-      status: 200,
-      message: `Successfully found contact with id ${contactId}!`,
-      data,
-    });
-  });
-
-  app.get('*', (req, res) => {
-    res.status(404).json({
-      message: 'Not Found',
-    });
-  });
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
