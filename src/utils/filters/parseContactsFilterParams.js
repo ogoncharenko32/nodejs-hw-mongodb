@@ -3,9 +3,9 @@ import { contactTypeList } from '../../constants/contacts.js';
 const parseBoolean = (value) => {
   if (typeof value !== 'string') return;
 
-  const parsedValue = JSON.parse(value);
+  // const parsedValue = JSON.parse(value);
 
-  return parsedValue;
+  return value;
 };
 
 const parseType = (value) => {
@@ -16,11 +16,11 @@ const parseType = (value) => {
   if (parsedValue(value)) return value;
 };
 
-export const parseContactsFilterParams = ({ isFavorite, type }) => {
+export const parseContactsFilterParams = ({ isFavourite, type }) => {
   const parsedType = parseType(type);
-  const parsedIsFavorite = parseBoolean(isFavorite);
+  const parsedIsFavourite = parseBoolean(isFavourite);
   return {
-    isFavorite: parsedIsFavorite,
+    isFavourite: parsedIsFavourite,
     contactType: parsedType,
   };
 };

@@ -16,7 +16,7 @@ const contactSchema = new Schema(
       type: String,
       required: false,
     },
-    isFavorite: {
+    isFavourite: {
       type: Boolean,
       required: false,
       default: false,
@@ -42,7 +42,7 @@ export const sortByList = [
   'name',
   'phoneNumber',
   'email',
-  'isFavorite',
+  'isFavourite',
   'contactType',
 ];
 
