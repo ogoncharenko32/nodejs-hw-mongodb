@@ -27,6 +27,11 @@ const contactSchema = new Schema(
       required: true,
       default: 'personal',
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -35,8 +40,8 @@ const contactSchema = new Schema(
 );
 
 contactSchema.post('save', handleSaveError);
-contactSchema.post('findOneAndUpdate', handleSaveError);
 contactSchema.pre('findOneAndUpdate', setUpdateSettings);
+contactSchema.post('findOneAndUpdate', handleSaveError);
 
 export const sortByList = [
   'name',

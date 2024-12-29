@@ -10,6 +10,7 @@ export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query, sortByList);
   const filter = parseContactsFilterParams(req.query);
+  filter.userId = req.user._id;
 
   const data = await contactsServices.getAllContacts(
     page,
@@ -26,9 +27,9 @@ export const getContactsController = async (req, res) => {
 };
 
 export const getContactByIdController = async (req, res, next) => {
-  console.log(req);
+  const { _id: userId } = req.user;
   const { contactId } = req.params;
-  const data = await contactsServices.getContactById(contactId);
+  const data = await contactsServices.getContact({ _id: contactId, userId });
 
   if (!data) {
     next(createHttpError(404, 'Contact not found'));
@@ -43,7 +44,8 @@ export const getContactByIdController = async (req, res, next) => {
 };
 
 export const addContactController = async (req, res) => {
-  const data = await contactsServices.addContact(req.body);
+  const { _id: userId } = req.user;
+  const data = await contactsServices.addContact({ ...req.body, userId });
 
   res.status(201).json({
     status: 201,
@@ -53,9 +55,13 @@ export const addContactController = async (req, res) => {
 };
 
 export const updateContactController = async (req, res, next) => {
+  const { _id: userId } = req.user;
   const { contactId } = req.params;
 
-  const data = await contactsServices.updateContact(contactId, req.body);
+  const data = await contactsServices.updateContact(
+    { _id: contactId, userId },
+    req.body,
+  );
 
   if (!data) {
     next(createHttpError(404, 'Contact not found'));
@@ -70,8 +76,9 @@ export const updateContactController = async (req, res, next) => {
 };
 
 export const deleteContactController = async (req, res, next) => {
+  const { _id: userId } = req.user;
   const { contactId } = req.params;
-  const data = await contactsServices.deleteContact(contactId);
+  const data = await contactsServices.deleteContact({ _id: contactId, userId });
 
   if (!data) {
     next(createHttpError(404, 'Contact not found'));
