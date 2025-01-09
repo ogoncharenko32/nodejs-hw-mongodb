@@ -4,9 +4,18 @@ import bcrypt from 'bcrypt';
 import { SessionCollection } from '../db/models/Session.js';
 import { randomBytes } from 'crypto';
 import {
+  SMTP,
   accessTokenLifetime,
   refreshTokenLifetime,
 } from '../constants/auth.js';
+
+import jwt from 'jsonwebtoken';
+import { getEnvVar } from '../utils/getEnvVar.js';
+import path from 'node:path';
+import fs from 'node:fs/promises';
+import handlebars from 'handlebars';
+import { sendEmail } from '../utils/sendEmail.js';
+import { TEMPLATES_DIR } from '../constants/index.js';
 
 const createSessionData = () => ({
   accessToken: randomBytes(30).toString('base64'),
@@ -89,3 +98,86 @@ export const getSession = async (filter) =>
   await SessionCollection.findOne(filter);
 
 export const getUser = async (filter) => await UsersCollection.findOne(filter);
+
+export const requestResetToken = async (email) => {
+  const user = await UsersCollection.findOne({ email });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found!');
+  }
+
+  const resetToken = jwt.sign(
+    {
+      sub: user._id,
+      email,
+    },
+    getEnvVar('JWT_SECRET'),
+    {
+      expiresIn: '15m',
+    },
+  );
+
+  const resetPasswordTemplatePath = path.join(
+    TEMPLATES_DIR,
+    'resetPassword.html',
+  );
+
+  const templateSource = (
+    await fs.readFile(resetPasswordTemplatePath)
+  ).toString();
+
+  const template = handlebars.compile(templateSource);
+
+  const html = template({
+    name: user.name,
+    link: `${getEnvVar('APP_DOMAIN')}/reset-pwd?token=${resetToken}`,
+  });
+
+  try {
+    await sendEmail({
+      from: getEnvVar(SMTP.SMTP_FROM),
+      to: email,
+      subject: 'Reset your password',
+      html,
+    });
+  } catch (error) {
+    console.log(error.message);
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+  }
+};
+
+export const resetPassword = async ({ token, password }) => {
+  let entries;
+
+  try {
+    entries = jwt.verify(token, getEnvVar('JWT_SECRET'));
+  } catch (err) {
+    if (err instanceof Error) throw createHttpError(401, err.message);
+    throw err;
+  }
+
+  const user = UsersCollection.findOne({
+    email: entries.email,
+    _id: entries.sub,
+  });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found!');
+  }
+
+  const hashPassword = await bcrypt.hash(password, 10);
+
+  await UsersCollection.updateOne(
+    {
+      _id: entries.sub,
+    },
+    {
+      password: hashPassword,
+    },
+  );
+
+  await SessionCollection.deleteOne({ userId: user._id });
+};
