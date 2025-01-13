@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import { getEnvVar } from './utils/getEnvVar.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ export const setupServer = () => {
 
   app.use(express.json());
   app.use(express.static('upload'));
+  app.use('/api-docs', swaggerDocs());
   app.use(cors());
   app.use(cookieParser());
 
