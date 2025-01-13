@@ -1,0 +1,91 @@
+tags:
+  - Auth
+summary: Register user
+operationId: register
+description: 'Register user'
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - email
+          - password
+        properties:
+          name:
+            description: 'User name'
+            type: string
+            example: 'Vasia Pupkin'
+          email:
+            description: 'User email'
+            type: string
+            example: 'vasia.pupkin@gmail.com'
+          password:
+            description: 'User password'
+            type: string
+responses:
+  '201':
+    description: 'Successfully registered a user!'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: 'Successfully registered a user!'
+            data:
+              schema:
+                type: object
+                required:
+                  - name
+                  - email
+                  - _id
+                properties:
+                  name:
+                    description: 'User name'
+                    type: string
+                    example: 'Vasia Pupkin'
+                  email:
+                    description: 'User email'
+                    type: string
+                    example: 'vasia.pupkin@gmail.com'
+                  _id:
+                    description: 'User id'
+                    type: string
+                    example: '6784f9a75e48c17707c077cc'
+  '409':
+    description: 'Conflict error'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 409
+            message:
+              type: string
+              example: 'ConflictError'
+            data:
+              type: object
+              schema:
+                type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
+                    example: 'Email in use'

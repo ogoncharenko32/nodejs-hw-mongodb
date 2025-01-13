@@ -2,12 +2,12 @@
   "openapi": "3.1.0",
   "info": {
     "version": "1.0.0",
-    "title": "<назва вашого додатку>",
+    "title": "<Contacts app>",
     "license": {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "description": "<опис вашого додатку>"
+    "description": "<Contacts web app>"
   },
   "servers": [
     {
@@ -415,6 +415,551 @@
           }
         }
       }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register user",
+        "operationId": "register",
+        "description": "Register user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "name": {
+                    "description": "User name",
+                    "type": "string",
+                    "example": "Vasia Pupkin"
+                  },
+                  "email": {
+                    "description": "User email",
+                    "type": "string",
+                    "example": "vasia.pupkin@gmail.com"
+                  },
+                  "password": {
+                    "description": "User password",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully registered a user!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully registered a user!"
+                    },
+                    "data": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "name",
+                          "email",
+                          "_id"
+                        ],
+                        "properties": {
+                          "name": {
+                            "description": "User name",
+                            "type": "string",
+                            "example": "Vasia Pupkin"
+                          },
+                          "email": {
+                            "description": "User email",
+                            "type": "string",
+                            "example": "vasia.pupkin@gmail.com"
+                          },
+                          "_id": {
+                            "description": "User id",
+                            "type": "string",
+                            "example": "6784f9a75e48c17707c077cc"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 409
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "ConflictError"
+                    },
+                    "data": {
+                      "type": "object",
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "message"
+                        ],
+                        "properties": {
+                          "message": {
+                            "type": "string",
+                            "example": "Email in use"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login user",
+        "operationId": "login",
+        "description": "Login user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "description": "User email",
+                    "type": "string",
+                    "example": "vasia.pupkin@gmail.com"
+                  },
+                  "password": {
+                    "description": "User password",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully logged in a user!",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string",
+                  "example": "sessionId=6784ef770c44ab5c7e0bfd30; Path=/; HttpOnly"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully logged in a user!"
+                    },
+                    "data": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "accessToken"
+                        ],
+                        "properties": {
+                          "accessToken": {
+                            "description": "Access token",
+                            "type": "string",
+                            "example": "GR6+WINzc2L1BM1E23ZVM4X/z6T+w+qDBAnwv/cL"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UnauthorizedError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "UnauthorizedError"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Email or password invalid"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Refresh token",
+        "operationId": "refresh",
+        "description": "Refresh user token",
+        "security": [
+          {
+            "cookieAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully refreshed session!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully refreshed session!"
+                    },
+                    "data": {
+                      "schema": {
+                        "type": "object",
+                        "required": [
+                          "accessToken"
+                        ],
+                        "properties": {
+                          "accessToken": {
+                            "description": "Access token",
+                            "type": "string",
+                            "example": "GR6+WINzc2L1BM1E23ZVM4X/z6T+w+qDBAnwv/cL"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UnauthorizedError\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "UnauthorizedError"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Session not found"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/send-reset-email": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Request reset token",
+        "operationId": "requestResetToken",
+        "description": "Request reset token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "description": "User email",
+                    "type": "string",
+                    "example": "vasia.pupkin@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reset password email has been successfully sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Reset password email has been successfully sent."
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFoundError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "NotFoundError"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "User not found!"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset-pwd": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Reset password",
+        "operationId": "resetPassword",
+        "description": "Reset password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "token",
+                  "password"
+                ],
+                "properties": {
+                  "token": {
+                    "description": "Token",
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzdhOWY5MjdjMGZkZGFiMjUyMzkxNTEiLCJlbWFpbCI6ImtyYXBuaWtuaWwzMkBnbWFpbC5jb20iLCJpYXQiOjE3MzY2MTMwMDMsImV4cCI6MTczNjYxMzkwM30.HzRI5UvcEvRFxyB5JG8JFScbX6raRQEIDIvz23TIdhI"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password has been successfully reset.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Password has been successfully reset."
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UnauthorizedError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "UnauthorizedError"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "message"
+                      ],
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "jwt expired"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -422,6 +967,11 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer"
+      },
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "sessionId"
       }
     },
     "schemas": {

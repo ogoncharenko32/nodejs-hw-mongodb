@@ -1,0 +1,62 @@
+tags:
+  - Auth
+summary: Request reset token
+operationId: requestResetToken
+description: 'Request reset token'
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - email
+        properties:
+          email:
+            description: 'User email'
+            type: string
+            example: 'vasia.pupkin@gmail.com'
+responses:
+  '200':
+    description: 'Reset password email has been successfully sent.'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: 'Reset password email has been successfully sent.'
+            data:
+              type: object
+  '404':
+    description: 'NotFoundError'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: NotFoundError
+            data:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  example: 'User not found!'
