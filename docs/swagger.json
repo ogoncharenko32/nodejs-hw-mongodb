@@ -14,7 +14,7 @@
       "url": "http://localhost:3000"
     },
     {
-      "url": null
+      "url": "https://contacts-db-7nmg.onrender.com"
     }
   ],
   "tags": null,
@@ -37,9 +37,9 @@
             "in": "query",
             "name": "page",
             "schema": {
-              "type": "integer"
-            },
-            "example": 1
+              "type": "integer",
+              "example": 1
+            }
           },
           {
             "in": "query",
@@ -76,19 +76,6 @@
             "schema": {
               "type": "boolean",
               "example": true
-            }
-          },
-          {
-            "in": "query",
-            "name": "contactType",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "work",
-                "home",
-                "personal"
-              ],
-              "example": "home"
             }
           }
         ],
@@ -161,6 +148,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
           }
         }
       },
@@ -180,7 +170,48 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/contact"
+                "type": "object",
+                "required": [
+                  "name",
+                  "phoneNumber",
+                  "contactType"
+                ],
+                "properties": {
+                  "name": {
+                    "description": "Contact name",
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "phoneNumber": {
+                    "description": "Contact phone number",
+                    "type": "string",
+                    "example": "+380671234567"
+                  },
+                  "email": {
+                    "description": "Contact email",
+                    "type": "string",
+                    "example": "john.doe@gmail.com"
+                  },
+                  "isFavourite": {
+                    "description": "Whether contact is favourite",
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "contactType": {
+                    "description": "Type of contact",
+                    "type": "string",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ]
+                  },
+                  "photo": {
+                    "description": "Link to contact photo",
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
               }
             }
           }
@@ -682,6 +713,16 @@
         "security": [
           {
             "cookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "sessionId",
+            "schema": {
+              "type": "string",
+              "example": "6784ef770c44ab5c7e0bfd30"
+            }
           }
         ],
         "responses": {
