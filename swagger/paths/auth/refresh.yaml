@@ -5,6 +5,12 @@ operationId: refresh
 description: 'Refresh user token'
 security:
   - cookieAuth: []
+parameters:
+  - in: cookie
+    name: sessionId
+    schema:
+      type: string
+      example: 6784ef770c44ab5c7e0bfd30
 responses:
   '200':
     description: 'Successfully refreshed session!'

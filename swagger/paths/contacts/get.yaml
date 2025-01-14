@@ -10,7 +10,7 @@ parameters:
     name: page
     schema:
       type: integer
-    example: 1
+      example: 1
   - in: query
     name: perPage
     schema:
@@ -33,12 +33,6 @@ parameters:
     schema:
       type: boolean
       example: true
-  - in: query
-    name: contactType
-    schema:
-      type: string
-      enum: ['work', 'home', 'personal']
-      example: 'home'
 responses:
   '200':
     description: Successfully found contacts!
@@ -90,3 +84,5 @@ responses:
                 hasPreviousPage:
                   type: boolean
                   example: true
+  '401':
+    $ref: '../../components/responses/401.yaml'

@@ -9,7 +9,36 @@ requestBody:
   content:
     multipart/form-data:
       schema:
-        $ref: '../../components/schemas/contact.yaml'
+        type: object
+        required:
+          - name
+          - phoneNumber
+          - contactType
+        properties:
+          name:
+            description: 'Contact name'
+            type: string
+            example: 'John Doe'
+          phoneNumber:
+            description: 'Contact phone number'
+            type: string
+            example: '+380671234567'
+          email:
+            description: 'Contact email'
+            type: string
+            example: 'john.doe@gmail.com'
+          isFavourite:
+            description: 'Whether contact is favourite'
+            type: boolean
+            example: false
+          contactType:
+            description: 'Type of contact'
+            type: string
+            enum: ['work', 'home', 'personal']
+          photo:
+            description: 'Link to contact photo'
+            type: string
+            format: binary
 responses:
   '201':
     description: 'Successfully created a contact!'
