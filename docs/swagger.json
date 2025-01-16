@@ -77,6 +77,18 @@
               "type": "boolean",
               "example": true
             }
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "work",
+                "home",
+                "personal"
+              ]
+            }
           }
         ],
         "responses": {
